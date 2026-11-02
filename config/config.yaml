@@ -1,0 +1,6 @@
+threshold: 7.0
+feeds:
+  - name: BleepingComputer
+    url: https://www.bleepingcomputer.com/feed/
+  - name: Krebs
+    url: https://krebsonsecurity.com/feed/
