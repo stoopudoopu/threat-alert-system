@@ -1,4 +1,5 @@
 threshold: 7.0
+db_path: threatalert.db
 feeds:
   - name: BleepingComputer
     url: https://www.bleepingcomputer.com/feed/

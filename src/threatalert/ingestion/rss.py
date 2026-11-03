@@ -1,6 +1,7 @@
 import httpx
 import feedparser
 from threatalert.models import Article
+from threatalert.ingestion.base import Source
 from datetime import datetime, timezone
 
 
@@ -29,3 +30,11 @@ def _to_article(entry, source: str) -> Article:
         summary=entry.get("summary", ""),
         published=_to_datetime(entry.get("published_parsed"))
     )
+
+class RSSSource(Source):
+    def __init__(self, name: str, url: str):
+        self.name = name
+        self.url = url
+
+    def fetch_articles(self) -> list[Article]:
+        return parse(fetch(self.url), self.name)

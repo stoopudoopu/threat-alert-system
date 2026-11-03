@@ -1,5 +1,4 @@
 from pathlib import Path
-
 import yaml
 from pydantic import BaseModel, Field
 
@@ -11,6 +10,7 @@ class FeedConfig(BaseModel):
 
 class Config(BaseModel):
     threshold: float = Field(ge=0, le=10)
+    db_path: str
     feeds: list[FeedConfig]
 
 
