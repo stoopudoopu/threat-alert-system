@@ -8,4 +8,7 @@ class Article(BaseModel):
     link: str
     summary: str
     published: datetime | None
+    cves: list[str] = []
+
+    
 

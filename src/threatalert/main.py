@@ -21,6 +21,5 @@ def main() -> None:
         store.mark_seen(article.id)  # provisional
 
 
-
 if __name__ == "__main__":
     main()
