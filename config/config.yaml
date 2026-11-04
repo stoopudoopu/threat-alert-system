@@ -1,7 +1,37 @@
 threshold: 7.0
 db_path: threatalert.db
+
+models:
+  scoring: claude-haiku-5-5
+  drafting: claude-sonnet-5-5
+  deep_relevance: claude-sonnet-5-5
+
+
 feeds:
   - name: BleepingComputer
     url: https://www.bleepingcomputer.com/feed/
   - name: Krebs
     url: https://krebsonsecurity.com/feed/
+
+
+client:
+  name: Northwind Logistics
+  tech_stack:
+    - Microsoft 365
+    - Azure AD
+    - Fortinet FortiGate
+    - VMware vSphere
+    - PostgreSQL
+    - Kubernetes
+    - GitLab
+    - Windows 11 laptops
+    - iOS and Android phones
+    - Ubuntu Linux servers
+  description: >
+    Mid-sized European logistics company with 800 employees. Runs a customer
+    portal on Kubernetes backed by PostgreSQL, with self-hosted GitLab for
+    development. Remote staff connect through FortiGate VPN. Warehouse systems
+    run on on-premises VMware vSphere. Identity is managed with Azure AD and
+    Microsoft 365. Holds customer personal data and is subject to GDPR. Staff use 
+    Windows 11 laptops and iOS or Android phones with corporate email. 
+    Servers run Ubuntu Linux.

@@ -1,6 +1,7 @@
 from pathlib import Path
 import yaml
 from pydantic import BaseModel, Field
+from threatalert.models import ClientProfile
 
 
 class FeedConfig(BaseModel):
@@ -12,6 +13,8 @@ class Config(BaseModel):
     threshold: float = Field(ge=0, le=10)
     db_path: str
     feeds: list[FeedConfig]
+    client: ClientProfile
+    models: dict[str, str]
 
 
 def load_config(path: str) -> Config:
