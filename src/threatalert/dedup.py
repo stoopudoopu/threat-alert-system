@@ -11,3 +11,4 @@ def filter_new(articles: list[Article], store: Store) -> list[Article]:
         ids_in_this_run.add(article.id)
         new_articles.append(article)
     return new_articles
+

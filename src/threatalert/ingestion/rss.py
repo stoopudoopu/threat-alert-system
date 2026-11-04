@@ -16,6 +16,12 @@ def parse(content: bytes, source: str) -> list[Article]:
         raise ValueError("Empty feed, no entries found :(. The provided URL can't be parsed for some reason.")
     return [_to_article(entry, source) for entry in feed.entries]
 
+def _extract_content(entry) -> str:
+    content = entry.get("content")
+    if not content:
+        return ""
+    return content[0].get("value", "")
+
 def _to_datetime(parsed) -> datetime | None:
     if parsed is None:
         return None
@@ -28,6 +34,7 @@ def _to_article(entry, source: str) -> Article:
         title=entry.get("title", ""),
         link=entry.get("link"),
         summary=entry.get("summary", ""),
+        content=_extract_content(entry),
         published=_to_datetime(entry.get("published_parsed"))
     )
 
