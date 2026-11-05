@@ -1,20 +1,12 @@
-from abc import ABC, abstractmethod
-
 import anthropic
 from pydantic import BaseModel
 
 
-class LLMRefusalError(Exception):
-    pass
+class LLMOutputError(Exception):
+    """The model answered, but with a refusal or without usable output."""
 
 
-class LLM(ABC):
-    @abstractmethod
-    def parse(self, role: str, system: str, prompt: str, schema: type[BaseModel]) -> BaseModel:
-        ...
-
-
-class AnthropicLLM(LLM):
+class LLMClient:
     def __init__(self, models: dict[str, str]):
         self.client = anthropic.Anthropic()
         self.models = models
@@ -28,7 +20,7 @@ class AnthropicLLM(LLM):
             output_format=schema,
         )
         if response.stop_reason == "refusal":
-            raise LLMRefusalError(f"Model refused with role '{role}'")
+            raise LLMOutputError(f"Model refused with role '{role}'")
         if response.parsed_output is None:
-            raise ValueError(f"No parsed output, stop_reason={response.stop_reason}")
+            raise LLMOutputError(f"No parsed output, stop_reason={response.stop_reason}")
         return response.parsed_output

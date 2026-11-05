@@ -1,5 +1,8 @@
 threshold: 7.0
 db_path: threatalert.db
+max_concurrency: 3
+max_articles_per_run: 5
+experts: [severity, urgency, exposure]
 
 models:
   scoring: claude-haiku-5-5

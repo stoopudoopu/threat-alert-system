@@ -1,8 +1,8 @@
 from threatalert.models import Article
-from threatalert.store import Store
+from threatalert.store import SQLiteStore
 
 
-def filter_new(articles: list[Article], store: Store) -> list[Article]:
+def filter_new(articles: list[Article], store: SQLiteStore) -> list[Article]:
     new_articles = []
     ids_in_this_run = set()
     for article in articles:

@@ -29,3 +29,14 @@ class DeepRelevance(BaseModel):
     reasoning: str
     verdict: Literal["yes", "no"]
 
+class AlertDraft(BaseModel):
+    summary: str
+    why_it_matters: str
+    actions: list[str]
+
+class ArticleResult(BaseModel):
+    article: Article
+    status: Literal["irrelevant", "below_threshold", "alert", "failed_retryable", "failed"]
+    scores: dict[str, int] = {}
+    average: float | None = None
+    draft: AlertDraft | None = None

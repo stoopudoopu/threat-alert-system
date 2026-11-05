@@ -1,25 +1,13 @@
-from abc import ABC, abstractmethod
-from pathlib import Path
-from threatalert.models import Article
-import sqlite3
 import json
+import sqlite3
+from datetime import datetime, timezone
 
-class Store(ABC):
-    @abstractmethod
-    def is_seen(self, article_id: str) -> bool:
-        ...
-    
-    @abstractmethod
-    def mark_seen(self, article_id: str) -> None:
-        ...
+from threatalert.models import Article
 
-    @abstractmethod
-    def save_article(self, article: Article) -> None:
-        ...
 
-class SQLiteStore(Store):
+class SQLiteStore:
     def __init__(self, path: str):
-        self.path = Path(path)
+        self.path = path
         conn = sqlite3.connect(self.path)
         conn.execute("CREATE TABLE IF NOT EXISTS seen (id TEXT PRIMARY KEY)")
         conn.execute("""
@@ -32,6 +20,15 @@ class SQLiteStore(Store):
                 content TEXT,
                 published TEXT,
                 cves TEXT
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS alerts (
+                article_id TEXT,
+                client TEXT,
+                message TEXT,
+                sent_at TEXT,
+                UNIQUE (article_id, client)
             )
         """)
         conn.commit()
@@ -63,6 +60,32 @@ class SQLiteStore(Store):
                 article.published.isoformat() if article.published else None,
                 json.dumps(article.cves),
             ),
+        )
+        conn.commit()
+        conn.close()
+
+    def save_alert(self, article_id: str, client: str, message: str) -> None:
+        conn = sqlite3.connect(self.path)
+        conn.execute(
+            "INSERT OR IGNORE INTO alerts (article_id, client, message) VALUES (?, ?, ?)",
+            (article_id, client, message),
+        )
+        conn.commit()
+        conn.close()
+
+    def unsent_alerts(self) -> list[tuple[str, str, str]]:
+        conn = sqlite3.connect(self.path)
+        rows = conn.execute(
+            "SELECT article_id, client, message FROM alerts WHERE sent_at IS NULL"
+        ).fetchall()
+        conn.close()
+        return rows
+
+    def mark_alert_sent(self, article_id: str, client: str) -> None:
+        conn = sqlite3.connect(self.path)
+        conn.execute(
+            "UPDATE alerts SET sent_at = ? WHERE article_id = ? AND client = ?",
+            (datetime.now(timezone.utc).isoformat(), article_id, client),
         )
         conn.commit()
         conn.close()
